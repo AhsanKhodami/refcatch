@@ -22,8 +22,7 @@ def get_doi_for_reference(reference_text, max_attempts=3, log=True):
         str or None: The DOI if found, None otherwise.
     """
     for attempt in range(max_attempts):
-        try:
-            # Clean up reference text and encode for URL
+        try:            # Clean up reference text and encode for URL
             clean_text = reference_text.strip()
             # Remove reference number if present
             if re.match(r'^\d+\.\t', clean_text):
@@ -40,12 +39,14 @@ def get_doi_for_reference(reference_text, max_attempts=3, log=True):
                 parts = clean_text.split('.')
                 if len(parts) >= 3:
                     clean_text = parts[1] + '.' + parts[2]
-              encoded_query = urllib.parse.quote(clean_text)
+            
+            encoded_query = urllib.parse.quote(clean_text)
             url = f"https://api.crossref.org/works?query={encoded_query}&rows=1"
             
             if log:
                 print(f"Attempt {attempt+1}/{max_attempts} - Searching for: {clean_text[:50]}...")
-              # Make the API request with user-agent header
+            
+            # Make the API request with user-agent header
             headers = {
                 'User-Agent': 'RefCatch/0.1.0 (https://github.com/AhsanKhodami/refcatch; mailto:ahsan.khodami@gmail.com)'
             }
