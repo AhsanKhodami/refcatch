@@ -9,9 +9,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    # ✅ Add permissions to allow trusted publishing
     permissions:
-      id-token: write  # Required for OpenID Connect authentication
+      id-token: write  # Required for trusted publishing using OpenID Connect
 
     steps:
       - name: Check out the repository
@@ -28,7 +27,10 @@ jobs:
           pip install build twine
 
       - name: Clean old build artifacts
-        run: rm -rf dist/ build/ *.egg-info
+        run: |
+          rm -rf dist/
+          rm -rf build/
+          rm -rf *.egg-info
 
       - name: Build the package
         run: python -m build
