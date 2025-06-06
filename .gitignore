@@ -48,6 +48,14 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# Custom test files
+test_*.py
+quick_*.py
+ref*.md
+ref*.txt
+.Rhistory
+.RData
+
 # Environments
 .env
 .venv

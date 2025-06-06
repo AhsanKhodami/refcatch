@@ -106,8 +106,7 @@ def refcatch(input_file, output_file, doi_file=None, log=True):
     with open(doi_file, 'w', encoding='utf-8') as f:
         f.write("")  # Create empty file
     
-    try:
-        # Read input file
+    try:        # Read input file
         with open(input_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         
@@ -117,42 +116,41 @@ def refcatch(input_file, output_file, doi_file=None, log=True):
         
         # Track current reference number for progress reporting
         current_ref = 0
-        total_refs = sum(1 for line in lines if re.match(r'^\d+\.\t', line))
+        
+        # Count references - assume each non-empty line that doesn't start with <!-- is a reference
+        total_refs = sum(1 for line in lines if line.strip() and not line.strip().startswith('<!--'))
         
         if log:
             print(f"Found {total_refs} references in the input file")
         
         # Process each line
-        for line in lines:
-            # Add the original line to the new content
+        for line in lines:            # Add the original line to the new content
             new_content.append(line)
             
-            # Check if this is a reference line (starts with a number and a tab)
-            if re.match(r'^\d+\.\t', line):
-                # Extract reference number
-                ref_match = re.match(r'^(\d+)\.', line)
-                if ref_match:
-                    current_ref += 1
-                    ref_num = ref_match.group(1)
+            # Check if this is a reference line (non-empty and not a comment)
+            if line.strip() and not line.strip().startswith('<!--'):
+                current_ref += 1
+                ref_num = current_ref  # Use current reference number
+                
+                if log:
+                    print(f"\nProcessing reference {ref_num} ({current_ref}/{total_refs})")
+                
+                # Get DOI with multiple attempts
+                doi = get_doi_for_reference(line, log=log)
+                  # If DOI found, add it after the reference
+                if doi:
+                    doi_line = f"    DOI: [https://doi.org/{doi}](https://doi.org/{doi})\n"
+                    new_content.append(doi_line)
+                    doi_count += 1
                     
-                    if log:
-                        print(f"\nProcessing reference {ref_num} ({current_ref}/{total_refs})")
-                    
-                    # Get DOI with multiple attempts
-                    doi = get_doi_for_reference(line, log=log)
-                    
-                    # If DOI found, add it after the reference
-                    if doi:
-                        doi_line = f"    DOI: {doi}\n"
-                        new_content.append(doi_line)
-                        doi_count += 1
-                        
-                        # Append to doi.txt file
-                        with open(doi_file, 'a', encoding='utf-8') as f:
-                            f.write(f"{doi}\n")
-                    
-                    # Wait to avoid rate limiting
-                    time.sleep(1 + random.random())  # 1-2 seconds
+                    # Append to doi.txt file
+                    with open(doi_file, 'a', encoding='utf-8') as f:
+                        f.write(f"{doi}\n")
+                  # Wait to avoid rate limiting
+                wait_time = 2 + random.random()  # 2-3 seconds
+                if log:
+                    print(f"Waiting {wait_time:.1f} seconds before next reference...")
+                time.sleep(wait_time)
         
         # Write new content to output file
         with open(output_file, 'w', encoding='utf-8') as f:
