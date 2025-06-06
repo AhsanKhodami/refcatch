@@ -7,5 +7,7 @@ attempts to find their DOIs, and outputs the results.
 
 from .core import refcatch
 
-__version__ = "0.1.0"
-__all__ = ["refcatch"]
+try:
+    from ._version import version as __version__
+except ModuleNotFoundError:
+    __version__ = "dev"  # Fallback for development mode

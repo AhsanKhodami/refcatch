@@ -44,11 +44,10 @@ def get_doi_for_reference(reference_text, max_attempts=3, log=True):
             url = f"https://api.crossref.org/works?query={encoded_query}&rows=1"
             
             if log:
-                print(f"Attempt {attempt+1}/{max_attempts} - Searching for: {clean_text[:50]}...")
-            
+                print(f"Attempt {attempt+1}/{max_attempts} - Searching for: {clean_text[:50]}...")            
             # Make the API request with user-agent header
             headers = {
-                'User-Agent': 'RefCatch/0.1.0 (https://github.com/AhsanKhodami/refcatch; mailto:ahsan.khodami@gmail.com)'
+                'User-Agent': 'RefCatch/0.1.1 (https://github.com/AhsanKhodami/refcatch; mailto:ahsan.khodami@gmail.com)'
             }
             response = requests.get(url, headers=headers)
             

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refcatch"
-version = "0.1.0"
+version = "0.1.1"
 description = "A package for processing academic references from plaintext files"
 readme = "README.md"
 authors = [

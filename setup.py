@@ -11,7 +11,8 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), "r", encoding="u
 
 setup(
     name="refcatch",
-    version="0.1.0",
+    use_scm_version=True,  # Automatically manage versioning from Git tags
+    setup_requires=["setuptools-scm"],  # Required for setuptools-scm versioning
     author="Mohammad Ahsan Khodami",
     author_email="ahsan.khodami@gmail.com",
     description="A package for processing academic references from plaintext files",
